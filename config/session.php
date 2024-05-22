@@ -156,7 +156,8 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    'domain' => env('SESSION_DOMAIN', 'api-100-wh6i.onrender.com'),
+
 
     /*
     |--------------------------------------------------------------------------
