@@ -53,48 +53,44 @@ class ApiController extends Controller
         }
     }
 
-    public function login(Request $request){
-        try
-        {
-            $validateUser = Validator::make($request->all(),
-            [
-              
-                'email' => 'required|email',
-                'password' => 'required',
-                
-            ]);
-    
-            if($validateUser->fails()){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $validateUser->errors()
-                ],422);
-            }
-
-            if(!Auth::attempt($request->only(['email', 'password']))){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'email & password doesn not match',
-                    
-                ],422);
-            }
-
-            $user = User::where('email',$request->email)->first();
+    public function login(Request $request) {
+        try {
+          $validateUser = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+          ]);
+      
+          if ($validateUser->fails()) {
             return response()->json([
-                'status' => true,
-                'message'=> 'User Logged In Succesfully',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
-            ],200);  
-
+              'status' => false,
+              'message' => 'validation error',
+              'errors' => $validateUser->errors()
+            ], 422);
+          }
+      
+          if (!Auth::attempt($request->only(['email', 'password']))) {
+            return response()->json([
+              'status' => false,
+              'message' => 'email & password do not match',
+            ], 422);
+          }
+      
+          // Assuming Auth::user() provides the authenticated user
+          $user = Auth::user();
+      
+          return response()->json([
+            'status' => true,
+            'message' => 'User Logged In Succesfully',
+            // Don't include the plain text token here
+          ], 200);
+      
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message'=> $th->getMessage(),
-            ],500);
-    }
-
-}
+          return response()->json([
+            'status' => false,
+            'message' => $th->getMessage(),
+          ], 500);
+        }
+      }
 
 
 public function  profile(){
@@ -105,6 +101,18 @@ public function  profile(){
         'data' => $userData,
         'id' => auth()->user()->id
     ],200); 
+}
+
+public function logout(){
+    auth()->user()->tokens()->delete();
+    
+    return response()->json([
+        'status' => true,
+        'message'=> 'Profile Information',
+        'data' => [],
+    ],200); 
+
+
 }
 
 }

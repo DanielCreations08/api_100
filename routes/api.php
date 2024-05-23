@@ -24,9 +24,14 @@ Route::post('/api/tokens/create', function (Request $request) {
 Route::group([
     "middleware" => ["auth::sanctum"]
 ],function(){
-    //Profile
-Route::post("profile",[ApiController::class,"profile"]);
+
+//Profile
+Route::get("profile",[ApiController::class,"profile"]);
 });
+
+
+//Logout
+Route::get("logout",[ApiController::class,"logout"]); 
 
 /*Route::get ('/user', function (Request $request) {
     return $request->user();
