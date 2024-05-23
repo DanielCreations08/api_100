@@ -44,6 +44,7 @@ class ApiController extends Controller
                 'message'=> 'User created Succesfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken
             ],200);  
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -79,6 +80,13 @@ class ApiController extends Controller
                 ],422);
             }
 
+            $user = User::where('email',$request->email)->first();
+            return response()->json([
+                'status' => true,
+                'message'=> 'User Logged In Succesfully',
+                'token' => $user->createToken("API TOKEN")->plainTextToken
+            ],200);  
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -86,6 +94,17 @@ class ApiController extends Controller
             ],500);
     }
 
+}
+
+
+public function  profile(){
+    $userData = auth()->user();
+    return response()->json([
+        'status' => true,
+        'message'=> 'Profile Information',
+        'data' => $userData,
+        'id' => auth()->user()->id
+    ],200); 
 }
 
 }
